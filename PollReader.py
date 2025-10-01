@@ -66,7 +66,7 @@ class PollReader():
             # map each part of the row to the correct column
             self.data_dict['month'].append(seperated[0])
             self.data_dict['date'].append(int(seperated[1]))
-            self.data_dict['sample'].append(int(seperated[2]))
+            self.data_dict['sample'].append(int(seperated[2].split(" ")[0]))
             self.data_dict['sample type'].append(seperated[3])
             self.data_dict['Harris result'].append(float(seperated[4]))
             self.data_dict['Trump result'].append(float(seperated[5]))
@@ -103,7 +103,26 @@ class PollReader():
             tuple: A tuple containing the average polling percentages for Harris and Trump
                    among likely voters, in that order.
         """
-        pass
+        harris_val=[]
+        trump_val=[]
+
+        for i, type in enumerate(self.build_data_dict['sample type']):
+            if "LV" in type.upper():
+                harris_val.append(self.data_dict['Harris result'][i])
+                trump_val.append(self.data_dict['Trump result'][i])
+        if harris_vals:
+            harris_avg = sum(harris_vals) / len(harris_vals)
+        else:
+            harris_avg = 0
+
+        if trump_vals:
+            trump_avg = sum(trump_vals) / len(trump_vals)
+        else:
+            trump_avg = 0
+
+        return harris_avg, trump_avg
+
+
 
 
     def polling_history_change(self):
