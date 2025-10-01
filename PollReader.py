@@ -55,13 +55,14 @@ class PollReader():
         """
 
         # iterate through each row of the data
-        for i, line in enumerate(self.raw_data):
+        for i, row in enumerate(self.raw_data):
             if i ==0:
                 continue
-
+            seperated = row.strip().split(',')
             # split up the row by column
+            if len(seperated)<5:
+                continue
             
-            seperated = line.strip().split(',')
 
             # map each part of the row to the correct column
             self.data_dict['month'].append(seperated[0])
@@ -87,11 +88,11 @@ class PollReader():
         max_trump = max(self.data_dict['Trump result'])
 
         if max_harris > max_trump:
-            return f"Harris {max_harris}%"
+            return f"Harris {max_harris:.1f}%"
         elif max_trump > max_harris:
-            return f"Trump {max_trump}%"
+            return f"Trump {max_trump:.1f}%"
         else:
-            return f"EVEN {max_harris}%"
+            return f"EVEN {max_harris:.1f}%"
         
 
 
@@ -103,13 +104,13 @@ class PollReader():
             tuple: A tuple containing the average polling percentages for Harris and Trump
                    among likely voters, in that order.
         """
-        harris_val=[]
-        trump_val=[]
+        harris_vals=[]
+        trump_vals=[]
 
-        for i, type in enumerate(self.build_data_dict['sample type']):
+        for i, stype in enumerate(self.build_data_dict['sample type']):
             if "LV" in type.upper():
-                harris_val.append(self.data_dict['Harris result'][i])
-                trump_val.append(self.data_dict['Trump result'][i])
+                harris_vals.append(self.data_dict['Harris result'][i])
+                trump_vals.append(self.data_dict['Trump result'][i])
         if harris_vals:
             harris_avg = sum(harris_vals) / len(harris_vals)
         else:
